@@ -1,3 +1,9 @@
+//     _                               _   ____            _                 
+//    / \   _ __ _ __   __ _ _   _  __| | |  _ \  ___ _ __(_)___  ___  _ __  
+//   / _ \ | '__| '_ \ / _` | | | |/ _` | | | | |/ _ \ '__| / __|/ _ \| '_ \ 
+//  / ___ \| |  | | | | (_| | |_| | (_| | | |_| |  __/ |  | \__ \ (_) | | | |
+// /_/   \_\_|  |_| |_|\__,_|\__,_|\__,_| |____/ \___|_|  |_|___/\___/|_| |_|
+
 const canvas = document.getElementById("Game");
 const ctx = canvas.getContext("2d");
 
@@ -38,7 +44,7 @@ class Snake {
         ctx.closePath();
     }
 
-    async move_snake() {
+    move_snake() {
         const head = { x: this.snake[0].x + this.velocity.x, y: this.snake[0].y + this.velocity.y }
         this.snake.unshift(head);
         this.snake.pop();
@@ -52,8 +58,8 @@ class Snake {
         return true
     }
 
-    async drawSnake() {
-        this.snake.forEach(await this.drawSnakePart.bind(this));
+    drawSnake() {
+        this.snake.forEach(this.drawSnakePart.bind(this));
     }
 
     wallColision() {
@@ -70,7 +76,7 @@ class Snake {
 class Appel {
     // nbpoint
     get point() {
-        return Math.floor((Math.random() * 4) + 1)
+        return Math.floor((Math.random() * 5) + 1)
     }
     //position
     position = {
@@ -151,7 +157,7 @@ const createBorder = () => {
 
 }
 
-theSnake = new Snake("lightblue", "#000")
+theSnake = new Snake("lightblue", "#000");
 theApple = new Appel();
 
 function change_direction(event) {
@@ -219,8 +225,8 @@ function Gameover(){
     theSnake.velocity = {
         x: 0,
         y: 0
-    }
-    alert('perdu')
+    };
+    alert('perdu');
 }
 
 function main() {

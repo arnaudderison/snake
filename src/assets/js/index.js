@@ -42,6 +42,14 @@ class Snake {
         const head = { x: this.snake[0].x + this.velocity.x, y: this.snake[0].y + this.velocity.y }
         this.snake.unshift(head);
         this.snake.pop();
+
+        for(let i = 1; i < this.snake.length; i++){
+            if((head.x - this.snake[i].x === 0) && (head.y - this.snake[i].y === 0)){
+                Gameover();
+                return false;
+            }
+        }
+        return true
     }
 
     async drawSnake() {
@@ -57,6 +65,35 @@ class Snake {
 
         return isLeftWall || isRightWall || isTopWall || isBottomWall;
     }
+}
+
+class Appel {
+    // nbpoint
+    get point() {
+        return Math.floor((Math.random() * 4) + 1)
+    }
+    //position
+    position = {
+        x: Math.floor(Math.random() * (COLUMN -2)) * BLOCK + BLOCK,
+        y: Math.floor(Math.random() * (LINE -2)) * BLOCK + BLOCK
+    }
+
+    //draw
+    draw(){
+        ctx.beginPath();
+
+        ctx.rect(this.position.x, this.position.y, BLOCK, BLOCK);
+        ctx.fillStyle = "#00FF00";
+        ctx.fill();
+
+        ctx.closePath();
+    }
+
+    newPosition(){
+        this.position.x = Math.floor(Math.random() * (COLUMN -2)) * BLOCK + BLOCK
+        this.position.y = Math.floor(Math.random() * (LINE -2)) * BLOCK + BLOCK
+    }
+
 }
 
 
@@ -115,6 +152,7 @@ const createBorder = () => {
 }
 
 theSnake = new Snake("lightblue", "#000")
+theApple = new Appel();
 
 function change_direction(event) {
     const LEFT_KEY = 37;
@@ -158,6 +196,13 @@ function change_direction(event) {
     }
 }
 
+function appelColision(){
+    if(((theSnake.snake[0].x - theApple.position.x === 0) && (theSnake.snake[0].y - theApple.position.y === 0))){
+        return true;
+    }
+    return false;
+}
+
 //event LISTENER
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
@@ -169,16 +214,34 @@ window.addEventListener('resize', () => {
 })
 window.addEventListener('keydown', change_direction)
 
+function Gameover(){
+    theSnake.snake = [{ x: BLOCK * 2, y: BLOCK * 2 }]
+    theSnake.velocity = {
+        x: 0,
+        y: 0
+    }
+    alert('perdu')
+}
 
 function main() {
-    if (theSnake.wallColision()) return;
+    if (theSnake.wallColision()) Gameover();
     setTimeout(() => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         createBorder()
-        theSnake.move_snake();
+        theApple.draw()
+        if(appelColision()){
+            let point = theApple.point;
+            console.log(point)
+            for(let i =0; i < point; i++){
+                const head = { x: theSnake.snake[0].x + theSnake.velocity.x, y: theSnake.snake[0].y + theSnake.velocity.y }
+                theSnake.snake.unshift(head);
+            }
+            theApple.newPosition()
+        }
+        theSnake.move_snake();  
         theSnake.drawSnake();
         main();
-    }, 100)
+    }, 50)
 
 }
 main();

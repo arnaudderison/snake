@@ -1,4 +1,4 @@
-# snake
+# Snake
 Redo the snake game with web application
 
 ## Game rule
